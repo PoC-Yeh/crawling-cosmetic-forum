@@ -9,6 +9,7 @@ domain_url = "http://www.intalking.com/"
 serp_url = 'http://www.intalking.com/search.php?mod=forum&searchid=17&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E8%B3%87%E7%94%9F%E5%A0%82'
 
 
+url_list = []
 #find all the page links (in h3 tag) 
 def serp_title_link():
     h3 = soup.find_all("h3")
@@ -79,7 +80,6 @@ def page_text(forum_url):
         return(" ")
        
 
-url_list = []
 sleep = 0.1    
     
 
