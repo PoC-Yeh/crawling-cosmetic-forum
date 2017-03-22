@@ -27,6 +27,57 @@ def next_page_link():
         return(next_page_url)
         
 
+def page_text(forum_url):
+    url_inside = forum_url
+    inside_text = requests.get(url_inside).text
+    inside_soup = BeautifulSoup(inside_text, "html.parser")
+
+    #all tds in this page
+    all_td = inside_soup.find_all('td',class_='t_f')
+
+    #td[0] ,split it 
+    if inside_soup.find('td',class_='t_f') != None:
+        all_td1 = inside_soup.find('td',class_='t_f').text
+        all_td1_split = all_td1.split("\n")
+
+        length = len(all_td)  #length of all_td
+        text_list = []  #list for text in this page
+
+        #deal with td[0]
+        unwanted = ['馬上加入美妝IN TALKING 可以看到更多美資訊喔', 
+                    '您需要 登錄 才可以下載或查看，沒有帳號？註冊 ', 
+                    '下載附件',
+                    'x',
+                    '\r']
+        all_td1_split = list(filter(lambda x : x not in unwanted, all_td1_split))
+
+        for word in all_td1_split:
+            if ".jpg" not in word and "保存到相冊" and "天前 上傳" not in word:
+                text_list.append(word)
+
+        #deal with td[1:] 
+        for i in range(1, len(all_td)):
+            comment_i = all_td[i].text
+            comment_i_split = comment_i.split("\n")
+            for c in comment_i_split:
+                text_list.append(c)
+
+        #strip the text in text_list
+        new_text_list = []  
+        for text in text_list:
+            a = text.strip()
+            if len(a) != 0:
+                if "\xa0" in a:
+                    b = a.replace("\xa0", "")
+                    new_text_list.append(b)
+                else:
+                    new_text_list.append(a)
+        return(new_text_list)
+    
+    else:
+        return(" ")
+       
+
 url_list = []
 sleep = 0.1    
     
@@ -45,64 +96,6 @@ while True:
     
     
 print(len(url_list))
-
-
-def page_text(forum_url):
-    url_inside = forum_url
-    inside_text = requests.get(url_inside).text
-    inside_soup = BeautifulSoup(inside_text, "html.parser")
-
-    #all tds in this page
-    all_td = inside_soup.find_all('td',class_='t_f')
-
-    #td[0] ,split it 
-    if inside_soup.find('td',class_='t_f') != None:
-        all_td1 = inside_soup.find('td',class_='t_f').text
-        all_td1_split = all_td1.split("\n")
-
-        length = len(all_td)  #length of all_td
-        text_list = []  #list for text in this page
-
-
-        #deal with td[0]
-        unwanted = ['馬上加入美妝IN TALKING 可以看到更多美資訊喔', 
-                    '您需要 登錄 才可以下載或查看，沒有帳號？註冊 ', 
-                    '下載附件',
-                    'x',
-                    '\r']
-        all_td1_split = list(filter(lambda x : x not in unwanted, all_td1_split))
-
-        for word in all_td1_split:
-            if ".jpg" not in word and "保存到相冊" and "天前 上傳" not in word:
-                text_list.append(word)
-
-
-        #deal with td[1:] 
-        for i in range(1, len(all_td)):
-            comment_i = all_td[i].text
-            comment_i_split = comment_i.split("\n")
-            for c in comment_i_split:
-                text_list.append(c)
-
-
-        #strip the text in text_list
-        new_text_list = []  
-        for text in text_list:
-            a = text.strip()
-            if len(a) != 0:
-                if "\xa0" in a:
-                    b = a.replace("\xa0", "")
-                    new_text_list.append(b)
-                else:
-                    new_text_list.append(a)
-
-
-        return(new_text_list)
-    
-    
-    else:
-        return(" ")
-       
         
         
 text_dict = {}      
