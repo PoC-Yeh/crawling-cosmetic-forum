@@ -102,14 +102,10 @@ def page_text(forum_url):
     
     else:
         return(" ")
-        
-        
-        
        
-
-text_dict = {}
-
-
+        
+        
+text_dict = {}      
 sleep2 = 0.1
 
 for url in url_list:
