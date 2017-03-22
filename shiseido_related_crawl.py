@@ -3,6 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import csv
 
 domain_url = "http://www.intalking.com/"
 serp_url = 'http://www.intalking.com/search.php?mod=forum&searchid=17&orderby=lastpost&ascdesc=desc&searchsubmit=yes&kw=%E8%B3%87%E7%94%9F%E5%A0%82'
@@ -105,3 +106,9 @@ for url in url_list:
     text_dict[url] = page_text(url)
     time.sleep(sleep2)
     sleep2 += 0.01       
+
+
+f = open('shiseido_comment_dict.csv', 'w')
+w = csv.writer(f)
+w.writerows(text_dict.items())
+f.close()    
